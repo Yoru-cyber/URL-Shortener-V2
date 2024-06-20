@@ -1,0 +1,37 @@
+services:
+  redis:
+    image: "redis:latest"
+    container_name: "my-redis"
+    ports:
+      - "6379:6379"
+    networks:
+      - mynet
+  url-shortener-api:
+    depends_on:
+      - redis
+    networks:
+      - mynet
+    volumes:
+      - ./src:/App/
+      - /App/bin
+      - /App/obj
+    build:
+      context: ./src/
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    command: ["dotnet", "watch", "run"]
+    restart: always
+  angular-client:
+    networks:
+      - mynet
+    volumes:
+      - ./client:/App/
+    build: 
+      context: ./client/
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    restart: always
+networks:
+  mynet:
