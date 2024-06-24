@@ -7,7 +7,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5001");
+                          policy.WithOrigins("http://localhost:5001")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                       });
 });
 builder.Services.AddEndpointsApiExplorer();
@@ -37,20 +39,21 @@ string randomString()
 
     return shortenedURl.ToString();
 }
+
 app.MapPost("/shorten", async (HttpRequest request) =>
 {
-    if (request.HasFormContentType is false){
-        return Results.BadRequest(new {message = "Body does not contain form"});
+    
+    if (request.HasJsonContentType() is false){
+        return Results.BadRequest(new {message = "Body is not in json format"});
     }
-    var form = await request.ReadFormAsync();
-    if (string.IsNullOrEmpty(form["url"]) is true)
+    var response = await request.ReadFromJsonAsync<ShortenedURL>() ?? throw new Exception("Response is null");
+    if (string.IsNullOrEmpty(response.URL) is true)
     {
         return Results.BadRequest("Url is empty");
     }
-    string url = form["url"];
-    string newUrl = randomString();
-    db.StringSet(newUrl, url);
-    return Results.Ok(new { message = "Success", newUrl = "http://localhost:3001/" + newUrl });
+    string shortenedURl = randomString();
+    db.StringSet(shortenedURl, response.URL);
+    return Results.Ok(new { message = "Success", shortenedURL = "http://localhost:3001/" + shortenedURl });
 
 
 });
@@ -65,3 +68,4 @@ app.MapGet("/{url}", (HttpContext context, string url) =>
 
 });
 app.Run();
+record ShortenedURL(string URL);

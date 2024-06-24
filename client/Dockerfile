@@ -1,11 +1,17 @@
-FROM node:alpine
+# Use a lightweight base image
+FROM node:alpine 
 
-WORKDIR /App
+# Set working directory
+WORKDIR /app
 
-COPY . /App
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-RUN npm install -g @angular/cli
+# Install dependencies
+RUN yarn install 
 
-RUN npm install
+# Copy the rest of the application code
+COPY . .
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "5001"]
+# Build the application for production (adjust build command if needed)
+CMD ["yarn", "dev"] 

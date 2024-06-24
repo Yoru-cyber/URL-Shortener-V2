@@ -1,27 +1,51 @@
-# Client
+# templates/spa
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.4.
+This template leverages [Remix SPA Mode](https://remix.run/docs/en/main/guides/spa-mode) to build your app as a Single-Page Application using [Client Data](https://remix.run/docs/en/main/guides/client-data) for all of your data loads and mutations.
 
-## Development server
+## Setup
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```shellscript
+npx create-remix@latest --template remix-run/remix/templates/spa
+```
 
-## Code scaffolding
+## Development
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+You can develop your SPA app just like you would a normal Remix app, via:
 
-## Build
+```shellscript
+npm run dev
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Production
 
-## Running unit tests
+When you are ready to build a production version of your app, `npm run build` will generate your assets and an `index.html` for the SPA.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```shellscript
+npm run build
+```
 
-## Running end-to-end tests
+### Preview
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+You can preview the build locally with [vite preview](https://vitejs.dev/guide/cli#vite-preview) to serve all routes via the single `index.html` file:
 
-## Further help
+```shellscript
+npm run preview
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+> [!IMPORTANT]
+>
+> `vite preview` is not designed for use as a production server
+
+### Deployment
+
+You can then serve your app from any HTTP server of your choosing. The server should be configured to serve multiple paths from a single root `/index.html` file (commonly called "SPA fallback"). Other steps may be required if the server doesn't directly support this functionality.
+
+For a simple example, you could use [sirv-cli](https://www.npmjs.com/package/sirv-cli):
+
+```shellscript
+npx sirv-cli build/client/ --single
+```
+
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.

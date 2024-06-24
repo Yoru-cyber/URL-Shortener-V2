@@ -6,6 +6,7 @@ services:
       - "6379:6379"
     networks:
       - mynet
+    restart: always
   url-shortener-api:
     depends_on:
       - redis
@@ -22,7 +23,7 @@ services:
       - "3001:3001"
     command: ["dotnet", "watch", "run"]
     restart: always
-  angular-client:
+  react-client:
     networks:
       - mynet
     volumes:
